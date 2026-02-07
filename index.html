@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>FunLessons – Translation Exam Ultra</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+<style>
+/* --- ESTILOS VISUALES (Originales mejorados [cite: 2-7]) --- */
+:root {
+    --primary: #283593;
+    --secondary: #e65100;
+    --bg-gradient: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    --color-en: #3f51b5;
+    --color-es: #ff9800;
+    --color-success: #4caf50;
+    --color-error: #f44336;
+}
+
+body {
+    margin: 0; font-family: "Segoe UI", Tahoma, sans-serif;
+    background: var(--bg-gradient); min-height: 100vh;
+    padding: 10px; display: flex; flex-direction: column; align-items: center;
+}
+
+.app {
+    width: 100%; max-width: 500px;
+    background: rgba(255, 255, 255, 0.95); border-radius: 30px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.1); overflow: hidden;
+    display: flex; flex-direction: column;
+}
+
+header { background: var(--primary); color: #fff; padding: 12px; text-align: center; display: flex; justify-content: center; align-items: center; gap: 10px; }
+header img { width: 25px; border-radius: 50%; border: 1px solid white; }
+
+.exam-bar { background: #333; color: white; padding: 8px 15px; display: none; justify-content: space-between; align-items: center; font-size: 0.85rem; font-weight: bold; }
+
+/* BARRA DE PROGRESO  */
+.progress-container { width: 100%; height: 6px; background: #eee; }
+.progress-bar { width: 0%; height: 100%; background: var(--color-en); transition: width 0.3s; }
+
+.mode-selector { display: flex; padding: 8px; gap: 5px; background: #fff; border-bottom: 1px solid #eee; }
+.mode-btn { flex: 1; padding: 8px; border: 1px solid #ddd; border-radius: 10px; background: #f8f9fa; color: #666; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 5px; transition: 0.2s; font-size: 0.75rem; }
+.mode-btn img { width: 15px; border-radius: 50%; }
+.mode-btn.active.en-es { background: var(--color-en); color: white; border-color: var(--color-en); }
+.mode-btn.active.es-en { background: var(--color-es); color: white; border-color: var(--color-es); }
+.mode-btn.exam.active { background: #333; color: white; }
+
+.controls-top { padding: 10px; text-align: center; }
+select { padding: 8px; border-radius: 15px; border: 2px solid #ccc; font-weight: bold; width: 95%; cursor: pointer; }
+
+.mix-panel { display: none; background: #f1f1f1; padding: 12px; margin: 0 10px 10px 10px; border-radius: 15px; text-align: left; max-height: 180px; overflow-y: auto; font-size: 0.9rem; }
+
+.scene { width: 100%; height: 320px; perspective: 1000px; display: flex; justify-content: center; align-items: center; }
+.card { width: 280px; height: 260px; position: relative; transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1); transform-style: preserve-3d; cursor: pointer; }
+.card.is-flipped { transform: rotateY(180deg); }
+.card-face { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 25px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; box-sizing: border-box; border: 5px solid #fff; box-shadow: 0 8px 15px rgba(0,0,0,0.1); }
+.lang-en { background: var(--color-en); color: white; }
+.lang-es { background: var(--color-es); color: white; }
+.card-face.back { transform: rotateY(180deg); }
+
+.flag-label { width: 40px; height: 40px; margin-bottom: 12px; border-radius: 50%; border: 2px solid white; }
+.main-text { font-size: 1.8rem; font-weight: 900; text-transform: uppercase; text-align: center; line-height: 1.1; }
+
+.exam-actions { display: none; gap: 20px; margin-top: 15px; }
+.action-btn { border: none; border-radius: 50%; width: 55px; height: 55px; color: white; font-size: 1.6rem; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+.btn-yes { background: var(--color-success); }
+.btn-no { background: var(--color-error); }
+
+.nav-controls { display: flex; justify-content: space-between; align-items: center; padding: 10px 25px; background: #f8f9fa; }
+.nav-btn { background: white; border: 1px solid #ddd; width: 45px; height: 45px; border-radius: 50%; font-size: 1.3rem; cursor: pointer; }
+.counter { font-weight: bold; color: #555; font-size: 0.9rem; }
+
+.sound-btn { background: rgba(255,255,255,0.2); border: 2px solid #fff; color: #fff; border-radius: 50%; width: 45px; height: 45px; cursor: pointer; font-size: 1.2rem; margin-top: 10px; }
+</style>
+</head>
+<body>
+
+<div class="app">
+    <div class="exam-bar" id="examBar">
+        <span>⏱️ <span id="timer">00:00</span></span>
+        <span>🔥 <span id="streak">0</span></span>
+        <span>✅ <span id="scoreCorrect">0</span> | ❌ <span id="scoreWrong">0</span></span>
+    </div>
+    <div class="progress-container"><div id="progressBar" class="progress-bar"></div></div>
+
+    <header>
+        <img src="english.png"> Flashcards 5 <img src="spanish.png">
+    </header>
+
+    <div class="mode-selector">
+        <button id="btnEnEs" class="mode-btn active en-es" onclick="setMode('EN-ES')"><img src="english.png"> EN➔ES</button>
+        <button id="btnEsEn" class="mode-btn" onclick="setMode('ES-EN')"><img src="spanish.png"> ES➔EN</button>
+        <button id="btnExam" class="mode-btn exam" onclick="toggleExamMode()">🎓 EXAM</button>
+    </div>
+
+    <div class="controls-top">
+        <select id="categorySelect" onchange="handleCategoryChange()">
+            <option value="ALL">🌟 All Topics (Mix All)</option>
+            <option value="MIXED">🧩 Mix Selected Topics...</option>
+        </select>
+    </div>
+
+    <div id="mixPanel" class="mix-panel">
+        <strong>Mix categories:</strong><hr>
+        <div id="mixCheckboxes"></div>
+        <button style="width:100%; margin-top:8px; padding:5px; border-radius:10px;" onclick="changeCategory()">Apply Mix</button>
+    </div>
+
+    <div class="scene">
+        <div class="card" id="flashcard" onclick="flipCard()">
+            <div class="card-face front" id="faceFront">
+                <img id="flagFront" class="flag-label" src="english.png">
+                <div class="main-text" id="textFront">...</div>
+            </div>
+            <div class="card-face back" id="faceBack">
+                <img id="flagBack" class="flag-label" src="spanish.png">
+                <div class="main-text" id="textBack">...</div>
+                <div id="examActions" class="exam-actions">
+                    <button class="action-btn btn-no" onclick="event.stopPropagation(); markResult(false)">❌</button>
+                    <button class="action-btn btn-yes" onclick="event.stopPropagation(); markResult(true)">✅</button>
+                </div>
+                <button id="soundBtn" class="sound-btn" onclick="event.stopPropagation(); playCurrentAudio()">🔊</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="nav-controls">
+        <button class="nav-btn" id="prevBtn" onclick="prevCard()">⬅️</button>
+        <div class="counter" id="counterDisplay">0 / 0</div>
+        <button class="nav-btn" id="nextBtn" onclick="nextCard()">➡️</button>
+    </div>
+</div>
+
+<script>
+const vocab = [
+    /* CATEGORÍAS Y VOCABULARIO (IDÉNTICO A SOLICITUDES PREVIAS) */
+    {en:"first", es:"primero", cat:"Ordinal Numbers", emoji:"🔢"}, {en:"second", es:"segundo", cat:"Ordinal Numbers", emoji:"🔢"}, {en:"third", es:"tercero", cat:"Ordinal Numbers", emoji:"🔢"},
+    {en:"fourth", es:"cuarto", cat:"Ordinal Numbers", emoji:"🔢"}, {en:"fifth", es:"quinto", cat:"Ordinal Numbers", emoji:"🔢"}, {en:"sixth", es:"sexto", cat:"Ordinal Numbers", emoji:"🔢"},
+    {en:"seventh", es:"séptimo", cat:"Ordinal Numbers", emoji:"🔢"}, {en:"eighth", es:"octavo", cat:"Ordinal Numbers", emoji:"🔢"}, {en:"ninth", es:"noveno", cat:"Ordinal Numbers", emoji:"🔢"},
+    {en:"tenth", es:"décimo", cat:"Ordinal Numbers", emoji:"🔢"}, {en:"eleventh", es:"undécimo", cat:"Ordinal Numbers", emoji:"🔢"}, {en:"twelfth", es:"duodécimo", cat:"Ordinal Numbers", emoji:"🔢"},
+    {en:"thirteenth", es:"decimotercero", cat:"Ordinal Numbers", emoji:"🔢"}, {en:"fourteenth", es:"decimocuarto", cat:"Ordinal Numbers", emoji:"🔢"}, {en:"fifteenth", es:"decimoquinto", cat:"Ordinal Numbers", emoji:"🔢"},
+    {en:"sixteenth", es:"decimosexto", cat:"Ordinal Numbers", emoji:"🔢"}, {en:"eighteenth", es:"decimoctavo", cat:"Ordinal Numbers", emoji:"🔢"}, {en:"nineteenth", es:"decimonoveno", cat:"Ordinal Numbers", emoji:"🔢"},
+    {en:"twentieth", es:"vigésimo", cat:"Ordinal Numbers", emoji:"🔢"}, {en:"thirtieth", es:"trigésimo", cat:"Ordinal Numbers", emoji:"🔢"}, {en:"twenty-second", es:"vigésimo 2º", cat:"Ordinal Numbers", emoji:"🔢"},
+    {en:"twenty-fifth", es:"vigésimo 5º", cat:"Ordinal Numbers", emoji:"🔢"}, {en:"thirty-first", es:"trigésimo 1º", cat:"Ordinal Numbers", emoji:"🔢"}, {en:"twenty-ninth", es:"vigésimo 9º", cat:"Ordinal Numbers", emoji:"🔢"},
+    {en:"bin", es:"papelera", cat:"Classroom", emoji:"🎒"}, {en:"diary", es:"agenda", cat:"Classroom", emoji:"🎒"}, {en:"folder", es:"carpeta", cat:"Classroom", emoji:"🎒"},
+    {en:"scissors", es:"tijeras", cat:"Classroom", emoji:"🎒"}, {en:"desk", es:"escritorio", cat:"Classroom", emoji:"🎒"}, {en:"calculator", es:"calculadora", cat:"Classroom", emoji:"🎒"},
+    {en:"notebook", es:"cuaderno", cat:"Classroom", emoji:"🎒"}, {en:"board", es:"pizarra", cat:"Classroom", emoji:"🎒"}, {en:"book", es:"libro", cat:"Classroom", emoji:"🎒"},
+    {en:"ruler", es:"regla", cat:"Classroom", emoji:"🎒"}, {en:"rubber", es:"goma", cat:"Classroom", emoji:"🎒"}, {en:"bookcase", es:"estantería", cat:"Classroom", emoji:"🎒"},
+    {en:"computer", es:"ordenador", cat:"Classroom", emoji:"🎒"}, {en:"marker", es:"rotulador", cat:"Classroom", emoji:"🎒"}, {en:"pen", es:"bolígrafo", cat:"Classroom", emoji:"🎒"},
+    {en:"pencil", es:"lápiz", cat:"Classroom", emoji:"🎒"}, {en:"crayon", es:"cera", cat:"Classroom", emoji:"🎒"},
+    {en:"Brazil", es:"Brasil", cat:"Countries", emoji:"🌍"}, {en:"Brazilian", es:"Brasileño", cat:"Countries", emoji:"🌍"},
+    {en:"China", es:"China", cat:"Countries", emoji:"🌍"}, {en:"Chinese", es:"Chino", cat:"Countries", emoji:"🌍"},
+    {en:"France", es:"Francia", cat:"Countries", emoji:"🌍"}, {en:"French", es:"Francés", cat:"Countries", emoji:"🌍"},
+    {en:"Germany", es:"Alemania", cat:"Countries", emoji:"🌍"}, {en:"German", es:"Alemán", cat:"Countries", emoji:"🌍"},
+    {en:"India", es:"India", cat:"Countries", emoji:"🌍"}, {en:"Indian", es:"Indio", cat:"Countries", emoji:"🌍"},
+    {en:"Japan", es:"Japón", cat:"Countries", emoji:"🌍"}, {en:"Japanese", es:"Japonés", cat:"Countries", emoji:"🌍"},
+    {en:"Mexico", es:"México", cat:"Countries", emoji:"🌍"}, {en:"Mexican", es:"Mexicano", cat:"Countries", emoji:"🌍"},
+    {en:"Morocco", es:"Marruecos", cat:"Countries", emoji:"🌍"}, {en:"Moroccan", es:"Marroquí", cat:"Countries", emoji:"🌍"},
+    {en:"Russia", es:"Rusia", cat:"Countries", emoji:"🌍"}, {en:"Russian", es:"Ruso", cat:"Countries", emoji:"🌍"},
+    {en:"Sweden", es:"Suecia", cat:"Countries", emoji:"🌍"}, {en:"Swedish", es:"Sueco", cat:"Countries", emoji:"🌍"},
+    {en:"Spain", es:"España", cat:"Countries", emoji:"🌍"}, {en:"Spanish", es:"Español", cat:"Countries", emoji:"🌍"},
+    {en:"the UK", es:"el Reino Unido", cat:"Countries", emoji:"🌍"}, {en:"British", es:"Británico", cat:"Countries", emoji:"🌍"},
+    {en:"the USA", es:"EE.UU.", cat:"Countries", emoji:"🌍"}, {en:"American", es:"Estadounidense", cat:"Countries", emoji:"🌍"},
+    {en:"my", es:"mi", cat:"Pronouns", emoji:"👤"}, {en:"your", es:"tu/vuestro", cat:"Pronouns", emoji:"👤"}, {en:"her", es:"su (ella)", cat:"Pronouns", emoji:"👤"},
+    {en:"his", es:"su (él)", cat:"Pronouns", emoji:"👤"}, {en:"its", es:"su (animal)", cat:"Pronouns", emoji:"👤"}, {en:"our", es:"nuestro", cat:"Pronouns", emoji:"👤"},
+    {en:"their", es:"su (ellos)", cat:"Pronouns", emoji:"👤"}, {en:"I", es:"yo", cat:"Pronouns", emoji:"👤"}, {en:"you", es:"tú", cat:"Pronouns", emoji:"👤"},
+    {en:"he", es:"él", cat:"Pronouns", emoji:"👤"}, {en:"she", es:"ella", cat:"Pronouns", emoji:"👤"}, {en:"it", es:"ello", cat:"Pronouns", emoji:"👤"},
+    {en:"we", es:"nosotros", cat:"Pronouns", emoji:"👤"}, {en:"they", es:"ellos", cat:"Pronouns", emoji:"👤"},
+    {en:"do baking", es:"hacer repostería", cat:"Free time", emoji:"🎨"}, {en:"do crafts", es:"hacer manualidades", cat:"Free time", emoji:"🎨"}, {en:"do gardening", es:"hacer jardinería", cat:"Free time", emoji:"🎨"},
+    {en:"do the shopping", es:"hacer la compra", cat:"Free time", emoji:"🎨"}, {en:"football training", es:"entrenar fútbol", cat:"Free time", emoji:"🎨"}, {en:"meet friends", es:"quedar con amigos", cat:"Free time", emoji:"🎨"},
+    {en:"play basketball", es:"baloncesto", cat:"Free time", emoji:"🎨"}, {en:"practise keyboard", es:"teclado", cat:"Free time", emoji:"🎨"}, {en:"visit grandparents", es:"visitar abuelos", cat:"Free time", emoji:"🎨"},
+    {en:"walk the dog", es:"pasear perro", cat:"Free time", emoji:"🎨"},
+    {en:"always", es:"siempre", cat:"Adverbs of frequency", emoji:"⏳"}, {en:"usually", es:"normalmente", cat:"Adverbs of frequency", emoji:"⏳"}, {en:"sometimes", es:"a veces", cat:"Adverbs of frequency", emoji:"⏳"},
+    {en:"hardly ever", es:"casi nunca", cat:"Adverbs of frequency", emoji:"⏳"}, {en:"never", es:"nunca", cat:"Adverbs of frequency", emoji:"⏳"}, {en:"once a week", es:"1 vez/semana", cat:"Adverbs of frequency", emoji:"⏳"},
+    {en:"twice a year", es:"2 veces/año", cat:"Adverbs of frequency", emoji:"⏳"}, {en:"three times a day", es:"3 veces/día", cat:"Adverbs of frequency", emoji:"⏳"},
+    {en:"four times a month", es:"4 veces/mes", cat:"Adverbs of frequency", emoji:"⏳"}, {en:"twice a week", es:"2 veces/semana", cat:"Adverbs of frequency", emoji:"⏳"},
+    {en:"adventure", es:"aventura", cat:"Genres", emoji:"🎬"}, {en:"animation", es:"animación", cat:"Genres", emoji:"🎬"}, {en:"comedy", es:"comedia", cat:"Genres", emoji:"🎬"},
+    {en:"detective", es:"detective", cat:"Genres", emoji:"🎬"}, {en:"drama", es:"drama", cat:"Genres", emoji:"🎬"}, {en:"fantasy", es:"fantasía", cat:"Genres", emoji:"🎬"},
+    {en:"historical", es:"histórico", cat:"Genres", emoji:"🎬"}, {en:"horror", es:"terror", cat:"Genres", emoji:"🎬"}, {en:"musical", es:"musical", cat:"Genres", emoji:"🎬"},
+    {en:"science fiction", es:"ciencia ficción", cat:"Genres", emoji:"🎬"},
+    {en:"boring", es:"aburrido", cat:"Opinions", emoji:"💬"}, {en:"brilliant", es:"brillante", cat:"Opinions", emoji:"💬"}, {en:"moving", es:"conmovedor", cat:"Opinions", emoji:"💬"},
+    {en:"exciting", es:"emocionante", cat:"Opinions", emoji:"💬"}, {en:"hilarious", es:"divertidísimo", cat:"Opinions", emoji:"💬"}, {en:"rubbish", es:"malo", cat:"Opinions", emoji:"💬"},
+    {en:"stunning", es:"impresionante", cat:"Opinions", emoji:"💬"}, {en:"terrifying", es:"aterrador", cat:"Opinions", emoji:"💬"},
+    {en:"baboon", es:"babuino", cat:"Animals", emoji:"🦁"}, {en:"camel", es:"camello", cat:"Animals", emoji:"🦁"}, {en:"cheetah", es:"guepardo", cat:"Animals", emoji:"🦁"},
+    {en:"chimpanzee", es:"chimpancé", cat:"Animals", emoji:"🦁"}, {en:"cobra", es:"cobra", cat:"Animals", emoji:"🦁"}, {en:"gorilla", es:"gorila", cat:"Animals", emoji:"🦁"},
+    {en:"hippopotamus", es:"hipopótamo", cat:"Animals", emoji:"🦁"}, {en:"leopard", es:"leopardo", cat:"Animals", emoji:"🦁"}, {en:"rhinoceros", es:"rinoceronte", cat:"Animals", emoji:"🦁"},
+    {en:"scorpion", es:"escorpión", cat:"Animals", emoji:"🦁"},
+    {en:"fast", es:"rápido", cat:"Animal adjectives", emoji:"🐾"}, {en:"slow", es:"lento", cat:"Animal adjectives", emoji:"🐾"}, {en:"long", es:"largo", cat:"Animal adjectives", emoji:"🐾"},
+    {en:"short", es:"corto", cat:"Animal adjectives", emoji:"🐾"}, {en:"aggressive", es:"agresivo", cat:"Animal adjectives", emoji:"🐾"}, {en:"big", es:"grande", cat:"Animal adjectives", emoji:"🐾"},
+    {en:"strong", es:"fuerte", cat:"Animal adjectives", emoji:"🐾"}, {en:"social", es:"social", cat:"Animal adjectives", emoji:"🐾"}, {en:"intelligent", es:"inteligente", cat:"Animal adjectives", emoji:"🐾"},
+    {en:"dangerous", es:"peligroso", cat:"Animal adjectives", emoji:"🐾"},
+    {en:"artistic", es:"artístico", cat:"Personality", emoji:"🧠"}, {en:"brave", es:"valiente", cat:"Personality", emoji:"🧠"}, {en:"friendly", es:"amigable", cat:"Personality", emoji:"🧠"},
+    {en:"funny", es:"gracioso", cat:"Personality", emoji:"🧠"}, {en:"hard-working", es:"trabajador", cat:"Personality", emoji:"🧠"}, {en:"lazy", es:"perezoso", cat:"Personality", emoji:"🧠"},
+    {en:"naughty", es:"travieso", cat:"Personality", emoji:"🧠"}, {en:"quiet", es:"tranquilo", cat:"Personality", emoji:"🧠"}, {en:"sporty", es:"deportista", cat:"Personality", emoji:"🧠"},
+    {en:"talkative", es:"hablador", cat:"Personality", emoji:"🧠"},
+    {en:"dishwasher", es:"lavavajillas", cat:"Inventions", emoji:"💡"}, {en:"headphones", es:"auriculares", cat:"Inventions", emoji:"💡"}, {en:"microwave", es:"microondas", cat:"Inventions", emoji:"💡"},
+    {en:"mobile phone", es:"móvil", cat:"Inventions", emoji:"💡"}, {en:"quadcopter", es:"cuadricóptero", cat:"Inventions", emoji:"💡"}, {en:"remote control", es:"mando", cat:"Inventions", emoji:"💡"},
+    {en:"Rubiks cube", es:"cubo Rubik", cat:"Inventions", emoji:"💡"}, {en:"solar panel", es:"panel solar", cat:"Inventions", emoji:"💡"}, {en:"tablet", es:"tableta", cat:"Inventions", emoji:"💡"},
+    {en:"washing machine", es:"lavadora", cat:"Inventions", emoji:"💡"},
+    {en:"say", es:"decir", cat:"Verbs", emoji:"🏃"}, {en:"spell", es:"deletrear", cat:"Verbs", emoji:"🏃"}, {en:"speak", es:"hablar", cat:"Verbs", emoji:"🏃"},
+    {en:"think", es:"pensar", cat:"Verbs", emoji:"🏃"}, {en:"have", es:"tener", cat:"Verbs", emoji:"🏃"}, {en:"go", es:"ir", cat:"Verbs", emoji:"🏃"},
+    {en:"help", es:"ayudar", cat:"Verbs", emoji:"🏃"}, {en:"work", es:"trabajar", cat:"Verbs", emoji:"🏃"}, {en:"wear", es:"llevar", cat:"Verbs", emoji:"🏃"},
+    {en:"eat", es:"comer", cat:"Verbs", emoji:"🏃"}, {en:"drink", es:"beber", cat:"Verbs", emoji:"🏃"}, {en:"jump", es:"saltar", cat:"Verbs", emoji:"🏃"},
+    {en:"walk", es:"caminar", cat:"Verbs", emoji:"🏃"}, {en:"fly", es:"volar", cat:"Verbs", emoji:"🏃"}, {en:"swim", es:"nadar", cat:"Verbs", emoji:"🏃"},
+    {en:"forget", es:"olvidar", cat:"Verbs", emoji:"🏃"}, {en:"invent", es:"inventar", cat:"Verbs", emoji:"🏃"}, {en:"play", es:"jugar", cat:"Verbs", emoji:"🏃"},
+    {en:"move", es:"mover", cat:"Verbs", emoji:"🏃"}, {en:"open", es:"abrir", cat:"Verbs", emoji:"🏃"}, {en:"close", es:"cerrar", cat:"Verbs", emoji:"🏃"},
+    {en:"love", es:"amar", cat:"Verbs", emoji:"🏃"}, {en:"like", es:"gustar", cat:"Verbs", emoji:"🏃"}, {en:"live", es:"vivir", cat:"Verbs", emoji:"🏃"},
+    {en:"dream", es:"soñar", cat:"Verbs", emoji:"🏃"}, {en:"cook", es:"cocinar", cat:"Verbs", emoji:"🏃"}, {en:"sing", es:"cantar", cat:"Verbs", emoji:"🏃"},
+    {en:"listen", es:"escuchar", cat:"Verbs", emoji:"🏃"}, {en:"clean", es:"limpiar", cat:"Verbs", emoji:"🏃"}, {en:"read", es:"leer", cat:"Verbs", emoji:"🏃"},
+    {en:"dance", es:"bailar", cat:"Verbs", emoji:"🏃"}, {en:"study", es:"estudiar", cat:"Verbs", emoji:"🏃"}, {en:"want", es:"querer", cat:"Verbs", emoji:"🏃"},
+    {en:"call", es:"llamar", cat:"Verbs", emoji:"🏃"}, {en:"arrive", es:"llegar", cat:"Verbs", emoji:"🏃"}, {en:"see", es:"ver", cat:"Verbs", emoji:"🏃"},
+    {en:"watch", es:"mirar", cat:"Verbs", emoji:"🏃"}, {en:"is", es:"es", cat:"Verbs", emoji:"🏃"}, {en:"there is", es:"hay", cat:"Verbs", emoji:"🏃"},
+    {en:"send", es:"enviar", cat:"Verbs", emoji:"🏃"}, {en:"give", es:"dar", cat:"Verbs", emoji:"🏃"}, {en:"make", es:"hacer", cat:"Verbs", emoji:"🏃"},
+    {en:"write", es:"escribir", cat:"Verbs", emoji:"🏃"}, {en:"ask", es:"preguntar", cat:"Verbs", emoji:"🏃"}, {en:"answer", es:"responder", cat:"Verbs", emoji:"🏃"},
+    {en:"learn", es:"aprender", cat:"Verbs", emoji:"🏃"}, {en:"understand", es:"entender", cat:"Verbs", emoji:"🏃"}, {en:"visit", es:"visitar", cat:"Verbs", emoji:"🏃"},
+    {en:"leave", es:"salir", cat:"Verbs", emoji:"🏃"}, {en:"take", es:"tomar", cat:"Verbs", emoji:"🏃"}, {en:"draw", es:"dibujar", cat:"Verbs", emoji:"🏃"},
+    {en:"find", es:"encontrar", cat:"Verbs", emoji:"🏃"}, {en:"choose", es:"elegir", cat:"Verbs", emoji:"🏃"}
+];
+
+let currentList = [], currentIndex = 0, isFlipped = false, errorList = [];
+let gameMode = 'EN-ES', isExamMode = false;
+let seconds = 0, timerInterval = null, correct = 0, wrong = 0, currentStreak = 0;
+
+const ui = {
+    card: document.getElementById("flashcard"),
+    faceFront: document.getElementById("faceFront"),
+    faceBack: document.getElementById("faceBack"),
+    textFront: document.getElementById("textFront"),
+    textBack: document.getElementById("textBack"),
+    flagFront: document.getElementById("flagFront"),
+    flagBack: document.getElementById("flagBack"),
+    counter: document.getElementById("counterDisplay"),
+    prevBtn: document.getElementById("prevBtn"),
+    nextBtn: document.getElementById("nextBtn"),
+    catSelect: document.getElementById("categorySelect"),
+    examBar: document.getElementById("examBar"),
+    timer: document.getElementById("timer"),
+    streak: document.getElementById("streak"),
+    scoreCorrect: document.getElementById("scoreCorrect"),
+    scoreWrong: document.getElementById("scoreWrong"),
+    examActions: document.getElementById("examActions"),
+    soundBtn: document.getElementById("soundBtn"),
+    mixPanel: document.getElementById("mixPanel"),
+    mixCheckboxes: document.getElementById("mixCheckboxes"),
+    progressBar: document.getElementById("progressBar")
+};
+
+const categoryOrder = [
+    { name: "Ordinal Numbers", emoji: "🔢" }, { name: "Classroom", emoji: "🎒" },
+    { name: "Countries", emoji: "🌍" }, { name: "Pronouns", emoji: "👤" },
+    { name: "Free time", emoji: "🎨" }, { name: "Adverbs of frequency", emoji: "⏳" },
+    { name: "Genres", emoji: "🎬" }, { name: "Opinions", emoji: "💬" },
+    { name: "Animals", emoji: "🦁" }, { name: "Animal adjectives", emoji: "🐾" },
+    { name: "Personality", emoji: "🧠" }, { name: "Inventions", emoji: "💡" },
+    { name: "Verbs", emoji: "🏃" }
+];
+
+const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+function playBeep(freq, dur) {
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = "sine"; osc.frequency.value = freq;
+    gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + dur);
+    osc.connect(gain); gain.connect(audioCtx.destination);
+    osc.start(); osc.stop(audioCtx.currentTime + dur);
+}
+
+function initCategories() {
+    categoryOrder.forEach(cat => {
+        const opt = document.createElement("option");
+        opt.value = cat.name; opt.textContent = `${cat.emoji} ${cat.name}`;
+        ui.catSelect.appendChild(opt);
+        const cb = `<div><input type="checkbox" value="${cat.name}" id="cb_${cat.name}"> <label for="cb_${cat.name}">${cat.emoji} ${cat.name}</label></div>`;
+        ui.mixCheckboxes.innerHTML += cb;
+    });
+}
+
+function setMode(mode) {
+    gameMode = mode;
+    document.getElementById("btnEnEs").className = 'mode-btn en-es' + (mode === 'EN-ES' ? ' active' : '');
+    document.getElementById("btnEsEn").className = 'mode-btn es-en' + (mode === 'ES-EN' ? ' active' : '');
+    ui.progressBar.style.background = mode === 'EN-ES' ? 'var(--color-en)' : 'var(--color-es)';
+    resetCardFace(); updateUI();
+}
+
+function toggleExamMode() {
+    isExamMode = !isExamMode;
+    document.getElementById("btnExam").classList.toggle("active", isExamMode);
+    ui.examBar.style.display = isExamMode ? "flex" : "none";
+    ui.examActions.style.display = isExamMode ? "flex" : "none";
+    ui.soundBtn.style.display = isExamMode ? "none" : "block";
+    if(isExamMode) startExam(); else resetExam();
+}
+
+function startExam() {
+    resetExam();
+    timerInterval = setInterval(() => {
+        seconds++;
+        ui.timer.textContent = `${String(Math.floor(seconds / 60)).padStart(2, '0')}:${String(seconds % 60).padStart(2, '0')}`;
+    }, 1000);
+    changeCategory();
+}
+
+function resetExam() {
+    clearInterval(timerInterval);
+    seconds = 0; correct = 0; wrong = 0; currentStreak = 0; errorList = [];
+    ui.timer.textContent = "00:00"; ui.scoreCorrect.textContent = "0"; ui.scoreWrong.textContent = "0"; ui.streak.textContent = "0";
+}
+
+function markResult(isCorrect) {
+    if(isCorrect) { 
+        correct++; currentStreak++; playBeep(880, 0.15); 
+    } else { 
+        wrong++; currentStreak = 0; errorList.push(currentList[currentIndex]); playBeep(220, 0.3); 
+    }
+    ui.scoreCorrect.textContent = correct; ui.scoreWrong.textContent = wrong; ui.streak.textContent = currentStreak;
+    
+    if(currentIndex === currentList.length - 1) {
+        clearInterval(timerInterval);
+        const msg = `🎉 Finished!\nScore: ${correct}/${currentList.length}\nTime: ${ui.timer.textContent}`;
+        if(errorList.length > 0 && confirm(msg + "\n\nDo you want to repeat only the errors?")) {
+            currentList = shuffleArray([...errorList]);
+            errorList = []; currentIndex = 0; correct = 0; wrong = 0; 
+            ui.scoreCorrect.textContent = "0"; ui.scoreWrong.textContent = "0";
+            resetCardFace(); updateUI();
+        } else {
+            toggleExamMode();
+        }
+    } else {
+        nextCard();
+    }
+}
+
+function handleCategoryChange() {
+    ui.mixPanel.style.display = (ui.catSelect.value === "MIXED") ? "block" : "none";
+    if(ui.catSelect.value !== "MIXED") changeCategory();
+}
+
+function changeCategory() {
+    const val = ui.catSelect.value;
+    let selectedCats = [];
+    if(val === "ALL") selectedCats = categoryOrder.map(c => c.name);
+    else if (val === "MIXED") {
+        selectedCats = Array.from(ui.mixCheckboxes.querySelectorAll('input:checked')).map(cb => cb.value);
+        if(selectedCats.length === 0) return;
+        ui.mixPanel.style.display = "none";
+    } else selectedCats = [val];
+
+    currentList = shuffleArray([...vocab.filter(item => selectedCats.includes(item.cat))]);
+    currentIndex = 0; resetCardFace(); updateUI();
+}
+
+function updateUI() {
+    if(currentList.length === 0) return;
+    const item = currentList[currentIndex];
+    const isEnMode = gameMode === 'EN-ES';
+
+    ui.faceFront.className = 'card-face front ' + (isEnMode ? 'lang-en' : 'lang-es');
+    ui.faceBack.className = 'card-face back ' + (isEnMode ? 'lang-es' : 'lang-en');
+    ui.flagFront.src = isEnMode ? "english.png" : "spanish.png";
+    ui.flagBack.src = isEnMode ? "spanish.png" : "english.png";
+    ui.textFront.textContent = isEnMode ? item.en : item.es;
+    ui.textBack.textContent = isEnMode ? item.es : item.en;
+
+    ui.counter.textContent = `${currentIndex + 1} / ${currentList.length}`;
+    ui.progressBar.style.width = `${((currentIndex + 1) / currentList.length) * 100}%`;
+    ui.prevBtn.disabled = (currentIndex === 0);
+    ui.nextBtn.disabled = (currentIndex === currentList.length - 1);
+}
+
+function flipCard() {
+    isFlipped = !isFlipped;
+    ui.card.classList.toggle("is-flipped", isFlipped);
+    if(isFlipped && !isExamMode) setTimeout(playCurrentAudio, 200);
+}
+
+function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+}
+
+function resetCardFace() { isFlipped = false; ui.card.classList.remove("is-flipped"); }
+function nextCard() { if(currentIndex < currentList.length - 1) { currentIndex++; resetCardFace(); setTimeout(updateUI, 150); } }
+function prevCard() { if(currentIndex > 0) { currentIndex--; resetCardFace(); setTimeout(updateUI, 150); } }
+
+function playCurrentAudio() {
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(currentList[currentIndex].en);
+    utterance.lang = "en-GB"; utterance.rate = 0.9;
+    window.speechSynthesis.speak(utterance);
+}
+
+initCategories();
+changeCategory();
+</script>
+</body>
+</html>
