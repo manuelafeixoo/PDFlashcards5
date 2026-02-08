@@ -47,7 +47,6 @@ header img { width: 25px; border-radius: 50%; border: 1px solid white; }
 .mode-btn { flex: 1; padding: 8px; border: 1px solid #ddd; border-radius: 10px; background: #f8f9fa; color: #666; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 5px; transition: 0.2s; font-size: 0.75rem; }
 .mode-btn img { width: 15px; border-radius: 50%; }
 
-/* ESTADOS ACTIVOS DE LOS BOTONES */
 .mode-btn.active.en-es { background: var(--color-en); color: white; border-color: var(--color-en); }
 .mode-btn.active.es-en { background: var(--color-es); color: white; border-color: var(--color-es); }
 .mode-btn.exam.active { background: #90EE90; color: #1a5a1a; border-color: #76c976; }
@@ -310,7 +309,24 @@ function updateUI() {
     ui.progressBar.style.width = `${((currentIndex + 1) / currentList.length) * 100}%`;
 }
 
-function flipCard() { isFlipped = !isFlipped; ui.card.classList.toggle("is-flipped", isFlipped); }
+// AUDIO AUTOMÁTICO SÓLO EN INGLÉS AL REVELAR LA SOLUCIÓN
+function flipCard() { 
+    isFlipped = !isFlipped; 
+    ui.card.classList.toggle("is-flipped", isFlipped); 
+    
+    // Si giramos para ver la respuesta, lee en inglés
+    if (isFlipped) {
+        setTimeout(() => speakEnglishOnly(), 100);
+    }
+}
+
+function speakEnglishOnly() {
+    const item = currentList[currentIndex];
+    const msg = new SpeechSynthesisUtterance(item.en);
+    msg.lang = 'en-US';
+    window.speechSynthesis.speak(msg);
+}
+
 function resetCardFace() { isFlipped = false; ui.card.classList.remove("is-flipped"); }
 function nextCard() { if(currentIndex < currentList.length - 1) { currentIndex++; resetCardFace(); updateUI(); } }
 function prevCard() { if(currentIndex > 0) { currentIndex--; resetCardFace(); updateUI(); } }
@@ -343,16 +359,56 @@ function startExam() {
 
 function resetExam() { clearInterval(timerInterval); seconds = 0; correct = 0; wrong = 0; currentStreak = 0; ui.timer.textContent = "00:00"; ui.scoreCorrect.textContent = "0"; ui.scoreWrong.textContent = "0"; ui.streak.textContent = "0"; }
 
+// SONIDOS DE EXAMEN GENERADOS POR FRECUENCIA
+function playExamSound(isSuccess) {
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const oscillator = audioCtx.createOscillator();
+    const gainNode = audioCtx.createGain();
+
+    oscillator.connect(gainNode);
+    gainNode.connect(audioCtx.destination);
+
+    if (isSuccess) {
+        oscillator.type = 'sine';
+        oscillator.frequency.setValueAtTime(880, audioCtx.currentTime);
+        oscillator.frequency.exponentialRampToValueAtTime(1200, audioCtx.currentTime + 0.1);
+        gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+    } else {
+        oscillator.type = 'square';
+        oscillator.frequency.setValueAtTime(150, audioCtx.currentTime);
+        gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+    }
+
+    oscillator.start();
+    oscillator.stop(audioCtx.currentTime + 0.3);
+}
+
+// CORRECCIÓN: EVITAR QUE SE VEA LA SIGUIENTE PALABRA ANTES DE GIRAR
 function markResult(isCorrect) {
-    if(isCorrect) { correct++; currentStreak++; } 
-    else { wrong++; currentStreak = 0; errorList.push(currentList[currentIndex]); }
+    // 1. Registrar resultados y sonido inmediatamente
+    if(isCorrect) { 
+        correct++; currentStreak++; playExamSound(true); 
+    } else { 
+        wrong++; currentStreak = 0; errorList.push(currentList[currentIndex]); playExamSound(false); 
+    }
     ui.scoreCorrect.textContent = correct; ui.scoreWrong.textContent = wrong; ui.streak.textContent = currentStreak;
     
-    if(currentIndex === currentList.length - 1) {
-        clearInterval(timerInterval);
-        alert(`Finished!\nScore: ${correct}/${currentList.length}`);
-        toggleExamMode();
-    } else nextCard();
+    // 2. Cerrar la carta primero (ocultar respuesta actual)
+    resetCardFace(); 
+
+    // 3. Esperar a que la carta esté de frente (animación CSS tarda 0.6s) para cambiar el texto
+    setTimeout(() => {
+        if(currentIndex === currentList.length - 1) {
+            clearInterval(timerInterval);
+            alert(`Finished!\nScore: ${correct}/${currentList.length}`);
+            toggleExamMode();
+        } else {
+            currentIndex++; 
+            updateUI(); 
+        }
+    }, 300); // 300ms es el punto donde la carta ya no muestra el texto trasero al usuario
 }
 
 function playCurrentAudio() {
