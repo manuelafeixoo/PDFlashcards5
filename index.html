@@ -2,11 +2,10 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>FunLessons – Translation Exam Ultra</title>
+<title>Flashcards Year 5</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
 <style>
-/* --- ESTILOS VISUALES (Originales mejorados [cite: 2-7]) --- */
 :root {
     --primary: #283593;
     --secondary: #e65100;
@@ -20,7 +19,8 @@
 body {
     margin: 0; font-family: "Segoe UI", Tahoma, sans-serif;
     background: var(--bg-gradient); min-height: 100vh;
-    padding: 10px; display: flex; flex-direction: column; align-items: center;
+    padding: 10px; display: flex;
+    flex-direction: column; align-items: center;
 }
 
 .app {
@@ -30,21 +30,27 @@ body {
     display: flex; flex-direction: column;
 }
 
-header { background: var(--primary); color: #fff; padding: 12px; text-align: center; display: flex; justify-content: center; align-items: center; gap: 10px; }
+header { 
+    background: var(--primary); color: #fff; padding: 12px;
+    text-align: center; display: flex; justify-content: center; align-items: center; gap: 10px; 
+    font-size: 1.8rem; 
+    font-weight: bold;
+}
 header img { width: 25px; border-radius: 50%; border: 1px solid white; }
 
 .exam-bar { background: #333; color: white; padding: 8px 15px; display: none; justify-content: space-between; align-items: center; font-size: 0.85rem; font-weight: bold; }
 
-/* BARRA DE PROGRESO  */
 .progress-container { width: 100%; height: 6px; background: #eee; }
 .progress-bar { width: 0%; height: 100%; background: var(--color-en); transition: width 0.3s; }
 
 .mode-selector { display: flex; padding: 8px; gap: 5px; background: #fff; border-bottom: 1px solid #eee; }
 .mode-btn { flex: 1; padding: 8px; border: 1px solid #ddd; border-radius: 10px; background: #f8f9fa; color: #666; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 5px; transition: 0.2s; font-size: 0.75rem; }
 .mode-btn img { width: 15px; border-radius: 50%; }
+
+/* ESTADOS ACTIVOS DE LOS BOTONES */
 .mode-btn.active.en-es { background: var(--color-en); color: white; border-color: var(--color-en); }
 .mode-btn.active.es-en { background: var(--color-es); color: white; border-color: var(--color-es); }
-.mode-btn.exam.active { background: #333; color: white; }
+.mode-btn.exam.active { background: #90EE90; color: #1a5a1a; border-color: #76c976; }
 
 .controls-top { padding: 10px; text-align: center; }
 select { padding: 8px; border-radius: 15px; border: 2px solid #ccc; font-weight: bold; width: 95%; cursor: pointer; }
@@ -85,12 +91,12 @@ select { padding: 8px; border-radius: 15px; border: 2px solid #ccc; font-weight:
     <div class="progress-container"><div id="progressBar" class="progress-bar"></div></div>
 
     <header>
-        <img src="english.png"> Flashcards 5 <img src="spanish.png">
+        <img src="english.png"> Flashcards Year 5 <img src="spanish.png">
     </header>
 
     <div class="mode-selector">
         <button id="btnEnEs" class="mode-btn active en-es" onclick="setMode('EN-ES')"><img src="english.png"> EN➔ES</button>
-        <button id="btnEsEn" class="mode-btn" onclick="setMode('ES-EN')"><img src="spanish.png"> ES➔EN</button>
+        <button id="btnEsEn" class="mode-btn es-en" onclick="setMode('ES-EN')"><img src="spanish.png"> ES➔EN</button>
         <button id="btnExam" class="mode-btn exam" onclick="toggleExamMode()">🎓 EXAM</button>
     </div>
 
@@ -109,11 +115,11 @@ select { padding: 8px; border-radius: 15px; border: 2px solid #ccc; font-weight:
 
     <div class="scene">
         <div class="card" id="flashcard" onclick="flipCard()">
-            <div class="card-face front" id="faceFront">
+            <div class="card-face front lang-en" id="faceFront">
                 <img id="flagFront" class="flag-label" src="english.png">
                 <div class="main-text" id="textFront">...</div>
             </div>
-            <div class="card-face back" id="faceBack">
+            <div class="card-face back lang-es" id="faceBack">
                 <img id="flagBack" class="flag-label" src="spanish.png">
                 <div class="main-text" id="textBack">...</div>
                 <div id="examActions" class="exam-actions">
@@ -134,7 +140,6 @@ select { padding: 8px; border-radius: 15px; border: 2px solid #ccc; font-weight:
 
 <script>
 const vocab = [
-    /* CATEGORÍAS Y VOCABULARIO (IDÉNTICO A SOLICITUDES PREVIAS) */
     {en:"first", es:"primero", cat:"Ordinal Numbers", emoji:"🔢"}, {en:"second", es:"segundo", cat:"Ordinal Numbers", emoji:"🔢"}, {en:"third", es:"tercero", cat:"Ordinal Numbers", emoji:"🔢"},
     {en:"fourth", es:"cuarto", cat:"Ordinal Numbers", emoji:"🔢"}, {en:"fifth", es:"quinto", cat:"Ordinal Numbers", emoji:"🔢"}, {en:"sixth", es:"sexto", cat:"Ordinal Numbers", emoji:"🔢"},
     {en:"seventh", es:"séptimo", cat:"Ordinal Numbers", emoji:"🔢"}, {en:"eighth", es:"octavo", cat:"Ordinal Numbers", emoji:"🔢"}, {en:"ninth", es:"noveno", cat:"Ordinal Numbers", emoji:"🔢"},
@@ -167,9 +172,9 @@ const vocab = [
     {en:"their", es:"su (ellos)", cat:"Pronouns", emoji:"👤"}, {en:"I", es:"yo", cat:"Pronouns", emoji:"👤"}, {en:"you", es:"tú", cat:"Pronouns", emoji:"👤"},
     {en:"he", es:"él", cat:"Pronouns", emoji:"👤"}, {en:"she", es:"ella", cat:"Pronouns", emoji:"👤"}, {en:"it", es:"ello", cat:"Pronouns", emoji:"👤"},
     {en:"we", es:"nosotros", cat:"Pronouns", emoji:"👤"}, {en:"they", es:"ellos", cat:"Pronouns", emoji:"👤"},
-    {en:"do baking", es:"hacer repostería", cat:"Free time", emoji:"🎨"}, {en:"do crafts", es:"hacer manualidades", cat:"Free time", emoji:"🎨"}, {en:"do gardening", es:"hacer jardinería", cat:"Free time", emoji:"🎨"},
-    {en:"do the shopping", es:"hacer la compra", cat:"Free time", emoji:"🎨"}, {en:"football training", es:"entrenar fútbol", cat:"Free time", emoji:"🎨"}, {en:"meet friends", es:"quedar con amigos", cat:"Free time", emoji:"🎨"},
-    {en:"play basketball", es:"baloncesto", cat:"Free time", emoji:"🎨"}, {en:"practise keyboard", es:"teclado", cat:"Free time", emoji:"🎨"}, {en:"visit grandparents", es:"visitar abuelos", cat:"Free time", emoji:"🎨"},
+    {en:"do baking", es:"repostería", cat:"Free time", emoji:"🎨"}, {en:"do crafts", es:"manualidades", cat:"Free time", emoji:"🎨"}, {en:"do gardening", es:"jardinería", cat:"Free time", emoji:"🎨"},
+    {en:"do the shopping", es:"comprar", cat:"Free time", emoji:"🎨"}, {en:"football training", es:"fútbol", cat:"Free time", emoji:"🎨"}, {en:"meet friends", es:"quedar", cat:"Free time", emoji:"🎨"},
+    {en:"play basketball", es:"baloncesto", cat:"Free time", emoji:"🎨"}, {en:"practise keyboard", es:"teclado", cat:"Free time", emoji:"🎨"}, {en:"visit grandparents", es:"ver abuelos", cat:"Free time", emoji:"🎨"},
     {en:"walk the dog", es:"pasear perro", cat:"Free time", emoji:"🎨"},
     {en:"always", es:"siempre", cat:"Adverbs of frequency", emoji:"⏳"}, {en:"usually", es:"normalmente", cat:"Adverbs of frequency", emoji:"⏳"}, {en:"sometimes", es:"a veces", cat:"Adverbs of frequency", emoji:"⏳"},
     {en:"hardly ever", es:"casi nunca", cat:"Adverbs of frequency", emoji:"⏳"}, {en:"never", es:"nunca", cat:"Adverbs of frequency", emoji:"⏳"}, {en:"once a week", es:"1 vez/semana", cat:"Adverbs of frequency", emoji:"⏳"},
@@ -256,31 +261,65 @@ const categoryOrder = [
     { name: "Verbs", emoji: "🏃" }
 ];
 
-const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-function playBeep(freq, dur) {
-    const osc = audioCtx.createOscillator();
-    const gain = audioCtx.createGain();
-    osc.type = "sine"; osc.frequency.value = freq;
-    gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + dur);
-    osc.connect(gain); gain.connect(audioCtx.destination);
-    osc.start(); osc.stop(audioCtx.currentTime + dur);
-}
-
 function initCategories() {
     categoryOrder.forEach(cat => {
         const opt = document.createElement("option");
         opt.value = cat.name; opt.textContent = `${cat.emoji} ${cat.name}`;
         ui.catSelect.appendChild(opt);
-        const cb = `<div><input type="checkbox" value="${cat.name}" id="cb_${cat.name}"> <label for="cb_${cat.name}">${cat.emoji} ${cat.name}</label></div>`;
-        ui.mixCheckboxes.innerHTML += cb;
+        const div = document.createElement("div");
+        div.innerHTML = `<input type="checkbox" value="${cat.name}" id="cb_${cat.name}"> <label for="cb_${cat.name}">${cat.emoji} ${cat.name}</label>`;
+        ui.mixCheckboxes.appendChild(div);
     });
+    changeCategory();
 }
+
+function handleCategoryChange() {
+    if(ui.catSelect.value === "MIXED") ui.mixPanel.style.display = "block";
+    else { ui.mixPanel.style.display = "none"; changeCategory(); }
+}
+
+function changeCategory() {
+    const val = ui.catSelect.value;
+    if(val === "ALL") currentList = [...vocab];
+    else if(val === "MIXED") {
+        const checked = Array.from(ui.mixCheckboxes.querySelectorAll('input:checked')).map(i => i.value);
+        currentList = vocab.filter(v => checked.includes(v.cat));
+        if(currentList.length === 0) { alert("Select at least one!"); return; }
+    } else currentList = vocab.filter(v => v.cat === val);
+    
+    currentList = shuffleArray(currentList);
+    currentIndex = 0;
+    resetCardFace();
+    updateUI();
+}
+
+function updateUI() {
+    if(currentList.length === 0) return;
+    const item = currentList[currentIndex];
+    const isEN = gameMode === 'EN-ES';
+    
+    ui.textFront.textContent = isEN ? item.en : item.es;
+    ui.textBack.textContent = isEN ? item.es : item.en;
+    ui.flagFront.src = isEN ? "english.png" : "spanish.png";
+    ui.flagBack.src = isEN ? "spanish.png" : "english.png";
+    
+    ui.faceFront.className = `card-face front lang-${isEN ? 'en' : 'es'}`;
+    ui.faceBack.className = `card-face back lang-${isEN ? 'es' : 'en'}`;
+    
+    ui.counter.textContent = `${currentIndex + 1} / ${currentList.length}`;
+    ui.progressBar.style.width = `${((currentIndex + 1) / currentList.length) * 100}%`;
+}
+
+function flipCard() { isFlipped = !isFlipped; ui.card.classList.toggle("is-flipped", isFlipped); }
+function resetCardFace() { isFlipped = false; ui.card.classList.remove("is-flipped"); }
+function nextCard() { if(currentIndex < currentList.length - 1) { currentIndex++; resetCardFace(); updateUI(); } }
+function prevCard() { if(currentIndex > 0) { currentIndex--; resetCardFace(); updateUI(); } }
+function shuffleArray(arr) { return arr.sort(() => Math.random() - 0.5); }
 
 function setMode(mode) {
     gameMode = mode;
-    document.getElementById("btnEnEs").className = 'mode-btn en-es' + (mode === 'EN-ES' ? ' active' : '');
-    document.getElementById("btnEsEn").className = 'mode-btn es-en' + (mode === 'ES-EN' ? ' active' : '');
+    document.getElementById("btnEnEs").classList.toggle("active", mode === 'EN-ES');
+    document.getElementById("btnEsEn").classList.toggle("active", mode === 'ES-EN');
     ui.progressBar.style.background = mode === 'EN-ES' ? 'var(--color-en)' : 'var(--color-es)';
     resetCardFace(); updateUI();
 }
@@ -300,103 +339,31 @@ function startExam() {
         seconds++;
         ui.timer.textContent = `${String(Math.floor(seconds / 60)).padStart(2, '0')}:${String(seconds % 60).padStart(2, '0')}`;
     }, 1000);
-    changeCategory();
 }
 
-function resetExam() {
-    clearInterval(timerInterval);
-    seconds = 0; correct = 0; wrong = 0; currentStreak = 0; errorList = [];
-    ui.timer.textContent = "00:00"; ui.scoreCorrect.textContent = "0"; ui.scoreWrong.textContent = "0"; ui.streak.textContent = "0";
-}
+function resetExam() { clearInterval(timerInterval); seconds = 0; correct = 0; wrong = 0; currentStreak = 0; ui.timer.textContent = "00:00"; ui.scoreCorrect.textContent = "0"; ui.scoreWrong.textContent = "0"; ui.streak.textContent = "0"; }
 
 function markResult(isCorrect) {
-    if(isCorrect) { 
-        correct++; currentStreak++; playBeep(880, 0.15); 
-    } else { 
-        wrong++; currentStreak = 0; errorList.push(currentList[currentIndex]); playBeep(220, 0.3); 
-    }
+    if(isCorrect) { correct++; currentStreak++; } 
+    else { wrong++; currentStreak = 0; errorList.push(currentList[currentIndex]); }
     ui.scoreCorrect.textContent = correct; ui.scoreWrong.textContent = wrong; ui.streak.textContent = currentStreak;
     
     if(currentIndex === currentList.length - 1) {
         clearInterval(timerInterval);
-        const msg = `🎉 Finished!\nScore: ${correct}/${currentList.length}\nTime: ${ui.timer.textContent}`;
-        if(errorList.length > 0 && confirm(msg + "\n\nDo you want to repeat only the errors?")) {
-            currentList = shuffleArray([...errorList]);
-            errorList = []; currentIndex = 0; correct = 0; wrong = 0; 
-            ui.scoreCorrect.textContent = "0"; ui.scoreWrong.textContent = "0";
-            resetCardFace(); updateUI();
-        } else {
-            toggleExamMode();
-        }
-    } else {
-        nextCard();
-    }
+        alert(`Finished!\nScore: ${correct}/${currentList.length}`);
+        toggleExamMode();
+    } else nextCard();
 }
-
-function handleCategoryChange() {
-    ui.mixPanel.style.display = (ui.catSelect.value === "MIXED") ? "block" : "none";
-    if(ui.catSelect.value !== "MIXED") changeCategory();
-}
-
-function changeCategory() {
-    const val = ui.catSelect.value;
-    let selectedCats = [];
-    if(val === "ALL") selectedCats = categoryOrder.map(c => c.name);
-    else if (val === "MIXED") {
-        selectedCats = Array.from(ui.mixCheckboxes.querySelectorAll('input:checked')).map(cb => cb.value);
-        if(selectedCats.length === 0) return;
-        ui.mixPanel.style.display = "none";
-    } else selectedCats = [val];
-
-    currentList = shuffleArray([...vocab.filter(item => selectedCats.includes(item.cat))]);
-    currentIndex = 0; resetCardFace(); updateUI();
-}
-
-function updateUI() {
-    if(currentList.length === 0) return;
-    const item = currentList[currentIndex];
-    const isEnMode = gameMode === 'EN-ES';
-
-    ui.faceFront.className = 'card-face front ' + (isEnMode ? 'lang-en' : 'lang-es');
-    ui.faceBack.className = 'card-face back ' + (isEnMode ? 'lang-es' : 'lang-en');
-    ui.flagFront.src = isEnMode ? "english.png" : "spanish.png";
-    ui.flagBack.src = isEnMode ? "spanish.png" : "english.png";
-    ui.textFront.textContent = isEnMode ? item.en : item.es;
-    ui.textBack.textContent = isEnMode ? item.es : item.en;
-
-    ui.counter.textContent = `${currentIndex + 1} / ${currentList.length}`;
-    ui.progressBar.style.width = `${((currentIndex + 1) / currentList.length) * 100}%`;
-    ui.prevBtn.disabled = (currentIndex === 0);
-    ui.nextBtn.disabled = (currentIndex === currentList.length - 1);
-}
-
-function flipCard() {
-    isFlipped = !isFlipped;
-    ui.card.classList.toggle("is-flipped", isFlipped);
-    if(isFlipped && !isExamMode) setTimeout(playCurrentAudio, 200);
-}
-
-function shuffleArray(array) {
-    for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
-    }
-    return array;
-}
-
-function resetCardFace() { isFlipped = false; ui.card.classList.remove("is-flipped"); }
-function nextCard() { if(currentIndex < currentList.length - 1) { currentIndex++; resetCardFace(); setTimeout(updateUI, 150); } }
-function prevCard() { if(currentIndex > 0) { currentIndex--; resetCardFace(); setTimeout(updateUI, 150); } }
 
 function playCurrentAudio() {
-    window.speechSynthesis.cancel();
-    const utterance = new SpeechSynthesisUtterance(currentList[currentIndex].en);
-    utterance.lang = "en-GB"; utterance.rate = 0.9;
-    window.speechSynthesis.speak(utterance);
+    const text = isFlipped ? ui.textBack.textContent : ui.textFront.textContent;
+    const lang = isFlipped ? (gameMode === 'EN-ES' ? 'es-ES' : 'en-US') : (gameMode === 'EN-ES' ? 'en-US' : 'es-ES');
+    const msg = new SpeechSynthesisUtterance(text);
+    msg.lang = lang;
+    window.speechSynthesis.speak(msg);
 }
 
-initCategories();
-changeCategory();
+window.onload = initCategories;
 </script>
 </body>
 </html>
