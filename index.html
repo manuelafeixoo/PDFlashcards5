@@ -101,8 +101,8 @@ select { padding: 8px; border-radius: 15px; border: 2px solid #ccc; font-weight:
 
     <div class="controls-top">
         <select id="categorySelect" onchange="handleCategoryChange()">
-            <option value="ALL">🌟 All Topics (Mix All)</option>
-            <option value="MIXED">🧩 Mix Selected Topics...</option>
+            <option value="ALL">🌟 All Topics</option>
+            <option value="MIXED">🧩 Mix Topics</option>
         </select>
     </div>
 
@@ -284,6 +284,7 @@ function changeCategory() {
         const checked = Array.from(ui.mixCheckboxes.querySelectorAll('input:checked')).map(i => i.value);
         currentList = vocab.filter(v => checked.includes(v.cat));
         if(currentList.length === 0) { alert("Select at least one!"); return; }
+        ui.mixPanel.style.display = "none";
     } else currentList = vocab.filter(v => v.cat === val);
     
     currentList = shuffleArray(currentList);
@@ -309,12 +310,9 @@ function updateUI() {
     ui.progressBar.style.width = `${((currentIndex + 1) / currentList.length) * 100}%`;
 }
 
-// AUDIO AUTOMÁTICO SÓLO EN INGLÉS AL REVELAR LA SOLUCIÓN
 function flipCard() { 
     isFlipped = !isFlipped; 
     ui.card.classList.toggle("is-flipped", isFlipped); 
-    
-    // Si giramos para ver la respuesta, lee en inglés
     if (isFlipped) {
         setTimeout(() => speakEnglishOnly(), 100);
     }
@@ -359,15 +357,12 @@ function startExam() {
 
 function resetExam() { clearInterval(timerInterval); seconds = 0; correct = 0; wrong = 0; currentStreak = 0; ui.timer.textContent = "00:00"; ui.scoreCorrect.textContent = "0"; ui.scoreWrong.textContent = "0"; ui.streak.textContent = "0"; }
 
-// SONIDOS DE EXAMEN GENERADOS POR FRECUENCIA
 function playExamSound(isSuccess) {
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     const oscillator = audioCtx.createOscillator();
     const gainNode = audioCtx.createGain();
-
     oscillator.connect(gainNode);
     gainNode.connect(audioCtx.destination);
-
     if (isSuccess) {
         oscillator.type = 'sine';
         oscillator.frequency.setValueAtTime(880, audioCtx.currentTime);
@@ -380,35 +375,21 @@ function playExamSound(isSuccess) {
         gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
         gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
     }
-
     oscillator.start();
     oscillator.stop(audioCtx.currentTime + 0.3);
 }
 
-// CORRECCIÓN: EVITAR QUE SE VEA LA SIGUIENTE PALABRA ANTES DE GIRAR
 function markResult(isCorrect) {
-    // 1. Registrar resultados y sonido inmediatamente
-    if(isCorrect) { 
-        correct++; currentStreak++; playExamSound(true); 
-    } else { 
-        wrong++; currentStreak = 0; errorList.push(currentList[currentIndex]); playExamSound(false); 
-    }
+    if(isCorrect) { correct++; currentStreak++; playExamSound(true); } else { wrong++; currentStreak = 0; errorList.push(currentList[currentIndex]); playExamSound(false); }
     ui.scoreCorrect.textContent = correct; ui.scoreWrong.textContent = wrong; ui.streak.textContent = currentStreak;
-    
-    // 2. Cerrar la carta primero (ocultar respuesta actual)
     resetCardFace(); 
-
-    // 3. Esperar a que la carta esté de frente (animación CSS tarda 0.6s) para cambiar el texto
     setTimeout(() => {
         if(currentIndex === currentList.length - 1) {
             clearInterval(timerInterval);
             alert(`Finished!\nScore: ${correct}/${currentList.length}`);
             toggleExamMode();
-        } else {
-            currentIndex++; 
-            updateUI(); 
-        }
-    }, 300); // 300ms es el punto donde la carta ya no muestra el texto trasero al usuario
+        } else { currentIndex++; updateUI(); }
+    }, 300);
 }
 
 function playCurrentAudio() {
