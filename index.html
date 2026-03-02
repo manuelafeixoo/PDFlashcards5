@@ -139,86 +139,111 @@ select { padding: 8px; border-radius: 15px; border: 2px solid #ccc; font-weight:
 
 <script>
 const vocab = [
+    // 1-24: Ordinal Numbers (24 items)
     {en:"first", es:"primero", cat:"Ordinal Numbers", emoji:"🔢"}, {en:"second", es:"segundo", cat:"Ordinal Numbers", emoji:"🔢"}, {en:"third", es:"tercero", cat:"Ordinal Numbers", emoji:"🔢"},
     {en:"fourth", es:"cuarto", cat:"Ordinal Numbers", emoji:"🔢"}, {en:"fifth", es:"quinto", cat:"Ordinal Numbers", emoji:"🔢"}, {en:"sixth", es:"sexto", cat:"Ordinal Numbers", emoji:"🔢"},
     {en:"seventh", es:"séptimo", cat:"Ordinal Numbers", emoji:"🔢"}, {en:"eighth", es:"octavo", cat:"Ordinal Numbers", emoji:"🔢"}, {en:"ninth", es:"noveno", cat:"Ordinal Numbers", emoji:"🔢"},
     {en:"tenth", es:"décimo", cat:"Ordinal Numbers", emoji:"🔢"}, {en:"eleventh", es:"undécimo", cat:"Ordinal Numbers", emoji:"🔢"}, {en:"twelfth", es:"duodécimo", cat:"Ordinal Numbers", emoji:"🔢"},
     {en:"thirteenth", es:"decimotercero", cat:"Ordinal Numbers", emoji:"🔢"}, {en:"fourteenth", es:"decimocuarto", cat:"Ordinal Numbers", emoji:"🔢"}, {en:"fifteenth", es:"decimoquinto", cat:"Ordinal Numbers", emoji:"🔢"},
-    {en:"sixteenth", es:"decimosexto", cat:"Ordinal Numbers", emoji:"🔢"}, {en:"eighteenth", es:"decimoctavo", cat:"Ordinal Numbers", emoji:"🔢"}, {en:"nineteenth", es:"decimonoveno", cat:"Ordinal Numbers", emoji:"🔢"},
-    {en:"twentieth", es:"vigésimo", cat:"Ordinal Numbers", emoji:"🔢"}, {en:"thirtieth", es:"trigésimo", cat:"Ordinal Numbers", emoji:"🔢"}, {en:"twenty-second", es:"vigésimo 2º", cat:"Ordinal Numbers", emoji:"🔢"},
-    {en:"twenty-fifth", es:"vigésimo 5º", cat:"Ordinal Numbers", emoji:"🔢"}, {en:"thirty-first", es:"trigésimo 1º", cat:"Ordinal Numbers", emoji:"🔢"}, {en:"twenty-ninth", es:"vigésimo 9º", cat:"Ordinal Numbers", emoji:"🔢"},
+    {en:"sixteenth", es:"decimosexto", cat:"Ordinal Numbers", emoji:"🔢"}, {en:"seventeenth", es:"decimoséptimo", cat:"Ordinal Numbers", emoji:"🔢"}, {en:"eighteenth", es:"decimoctavo", cat:"Ordinal Numbers", emoji:"🔢"},
+    {en:"nineteenth", es:"decimonoveno", cat:"Ordinal Numbers", emoji:"🔢"}, {en:"twentieth", es:"vigésimo", cat:"Ordinal Numbers", emoji:"🔢"}, {en:"twenty-second", es:"vigésimo segundo", cat:"Ordinal Numbers", emoji:"🔢"},
+    {en:"twenty-fifth", es:"vigésimo quinto", cat:"Ordinal Numbers", emoji:"🔢"}, {en:"thirtieth", es:"trigésimo", cat:"Ordinal Numbers", emoji:"🔢"}, {en:"thirty-first", es:"trigésimo primero", cat:"Ordinal Numbers", emoji:"🔢"},
+    
+    // 25-41: Classroom (17 items)
     {en:"bin", es:"papelera", cat:"Classroom", emoji:"🎒"}, {en:"diary", es:"agenda", cat:"Classroom", emoji:"🎒"}, {en:"folder", es:"carpeta", cat:"Classroom", emoji:"🎒"},
     {en:"scissors", es:"tijeras", cat:"Classroom", emoji:"🎒"}, {en:"desk", es:"escritorio", cat:"Classroom", emoji:"🎒"}, {en:"calculator", es:"calculadora", cat:"Classroom", emoji:"🎒"},
     {en:"notebook", es:"cuaderno", cat:"Classroom", emoji:"🎒"}, {en:"board", es:"pizarra", cat:"Classroom", emoji:"🎒"}, {en:"book", es:"libro", cat:"Classroom", emoji:"🎒"},
-    {en:"ruler", es:"regla", cat:"Classroom", emoji:"🎒"}, {en:"rubber", es:"goma", cat:"Classroom", emoji:"🎒"}, {en:"bookcase", es:"estantería", cat:"Classroom", emoji:"🎒"},
+    {en:"ruler", es:"regla", cat:"Classroom", emoji:"🎒"}, {en:"rubber", es:"goma de borrar", cat:"Classroom", emoji:"🎒"}, {en:"bookcase", es:"estantería", cat:"Classroom", emoji:"🎒"},
     {en:"computer", es:"ordenador", cat:"Classroom", emoji:"🎒"}, {en:"marker", es:"rotulador", cat:"Classroom", emoji:"🎒"}, {en:"pen", es:"bolígrafo", cat:"Classroom", emoji:"🎒"},
     {en:"pencil", es:"lápiz", cat:"Classroom", emoji:"🎒"}, {en:"crayon", es:"cera", cat:"Classroom", emoji:"🎒"},
-    {en:"Brazil", es:"Brasil", cat:"Countries", emoji:"🌍"}, {en:"Brazilian", es:"Brasileño", cat:"Countries", emoji:"🌍"},
-    {en:"China", es:"China", cat:"Countries", emoji:"🌍"}, {en:"Chinese", es:"Chino", cat:"Countries", emoji:"🌍"},
-    {en:"France", es:"Francia", cat:"Countries", emoji:"🌍"}, {en:"French", es:"Francés", cat:"Countries", emoji:"🌍"},
-    {en:"Germany", es:"Alemania", cat:"Countries", emoji:"🌍"}, {en:"German", es:"Alemán", cat:"Countries", emoji:"🌍"},
-    {en:"India", es:"India", cat:"Countries", emoji:"🌍"}, {en:"Indian", es:"Indio", cat:"Countries", emoji:"🌍"},
-    {en:"Japan", es:"Japón", cat:"Countries", emoji:"🌍"}, {en:"Japanese", es:"Japonés", cat:"Countries", emoji:"🌍"},
-    {en:"Mexico", es:"México", cat:"Countries", emoji:"🌍"}, {en:"Mexican", es:"Mexicano", cat:"Countries", emoji:"🌍"},
-    {en:"Morocco", es:"Marruecos", cat:"Countries", emoji:"🌍"}, {en:"Moroccan", es:"Marroquí", cat:"Countries", emoji:"🌍"},
-    {en:"Russia", es:"Rusia", cat:"Countries", emoji:"🌍"}, {en:"Russian", es:"Ruso", cat:"Countries", emoji:"🌍"},
-    {en:"Sweden", es:"Suecia", cat:"Countries", emoji:"🌍"}, {en:"Swedish", es:"Sueco", cat:"Countries", emoji:"🌍"},
-    {en:"Spain", es:"España", cat:"Countries", emoji:"🌍"}, {en:"Spanish", es:"Español", cat:"Countries", emoji:"🌍"},
-    {en:"the UK", es:"el Reino Unido", cat:"Countries", emoji:"🌍"}, {en:"British", es:"Británico", cat:"Countries", emoji:"🌍"},
-    {en:"the USA", es:"EE.UU.", cat:"Countries", emoji:"🌍"}, {en:"American", es:"Estadounidense", cat:"Countries", emoji:"🌍"},
-    {en:"my", es:"mi", cat:"Pronouns", emoji:"👤"}, {en:"your", es:"tu/vuestro", cat:"Pronouns", emoji:"👤"}, {en:"her", es:"su (ella)", cat:"Pronouns", emoji:"👤"},
-    {en:"his", es:"su (él)", cat:"Pronouns", emoji:"👤"}, {en:"its", es:"su (animal)", cat:"Pronouns", emoji:"👤"}, {en:"our", es:"nuestro", cat:"Pronouns", emoji:"👤"},
-    {en:"their", es:"su (ellos)", cat:"Pronouns", emoji:"👤"}, {en:"I", es:"yo", cat:"Pronouns", emoji:"👤"}, {en:"you", es:"tú", cat:"Pronouns", emoji:"👤"},
-    {en:"he", es:"él", cat:"Pronouns", emoji:"👤"}, {en:"she", es:"ella", cat:"Pronouns", emoji:"👤"}, {en:"it", es:"ello", cat:"Pronouns", emoji:"👤"},
+    
+    // 42-67: Countries & Nationalities (26 items)
+    {en:"Brazil", es:"Brasil", cat:"Countries", emoji:"🌍"}, {en:"Brazilian", es:"brasileño", cat:"Countries", emoji:"🌍"},
+    {en:"China", es:"China", cat:"Countries", emoji:"🌍"}, {en:"Chinese", es:"chino", cat:"Countries", emoji:"🌍"},
+    {en:"France", es:"Francia", cat:"Countries", emoji:"🌍"}, {en:"French", es:"francés", cat:"Countries", emoji:"🌍"},
+    {en:"Germany", es:"Alemania", cat:"Countries", emoji:"🌍"}, {en:"German", es:"alemán", cat:"Countries", emoji:"🌍"},
+    {en:"India", es:"India", cat:"Countries", emoji:"🌍"}, {en:"Indian", es:"indio", cat:"Countries", emoji:"🌍"},
+    {en:"Japan", es:"Japón", cat:"Countries", emoji:"🌍"}, {en:"Japanese", es:"japonés", cat:"Countries", emoji:"🌍"},
+    {en:"Mexico", es:"México", cat:"Countries", emoji:"🌍"}, {en:"Mexican", es:"mexicano", cat:"Countries", emoji:"🌍"},
+    {en:"Morocco", es:"Marruecos", cat:"Countries", emoji:"🌍"}, {en:"Moroccan", es:"marroquí", cat:"Countries", emoji:"🌍"},
+    {en:"Russia", es:"Rusia", cat:"Countries", emoji:"🌍"}, {en:"Russian", es:"ruso", cat:"Countries", emoji:"🌍"},
+    {en:"Sweden", es:"Suecia", cat:"Countries", emoji:"🌍"}, {en:"Swedish", es:"sueco", cat:"Countries", emoji:"🌍"},
+    {en:"Spain", es:"España", cat:"Countries", emoji:"🌍"}, {en:"Spanish", es:"español", cat:"Countries", emoji:"🌍"},
+    {en:"the UK", es:"el Reino Unido", cat:"Countries", emoji:"🌍"}, {en:"British", es:"británico", cat:"Countries", emoji:"🌍"},
+    {en:"the USA", es:"EE.UU.", cat:"Countries", emoji:"🌍"}, {en:"American", es:"estadounidense", cat:"Countries", emoji:"🌍"},
+    
+    // 68-81: Pronouns (14 items)
+    {en:"my", es:"mi", cat:"Pronouns", emoji:"👤"}, {en:"your", es:"tu / vuestro", cat:"Pronouns", emoji:"👤"}, {en:"her", es:"su (de ella)", cat:"Pronouns", emoji:"👤"},
+    {en:"his", es:"su (de él)", cat:"Pronouns", emoji:"👤"}, {en:"its", es:"su (de ello/animal)", cat:"Pronouns", emoji:"👤"}, {en:"our", es:"nuestro", cat:"Pronouns", emoji:"👤"},
+    {en:"their", es:"su (de ellos)", cat:"Pronouns", emoji:"👤"}, {en:"I", es:"yo", cat:"Pronouns", emoji:"👤"}, {en:"you", es:"tú / vosotros", cat:"Pronouns", emoji:"👤"},
+    {en:"he", es:"él", cat:"Pronouns", emoji:"👤"}, {en:"she", es:"ella", cat:"Pronouns", emoji:"👤"}, {en:"it", es:"ello / eso", cat:"Pronouns", emoji:"👤"},
     {en:"we", es:"nosotros", cat:"Pronouns", emoji:"👤"}, {en:"they", es:"ellos", cat:"Pronouns", emoji:"👤"},
-    {en:"do baking", es:"repostería", cat:"Free time", emoji:"🎨"}, {en:"do crafts", es:"manualidades", cat:"Free time", emoji:"🎨"}, {en:"do gardening", es:"jardinería", cat:"Free time", emoji:"🎨"},
-    {en:"do the shopping", es:"comprar", cat:"Free time", emoji:"🎨"}, {en:"football training", es:"fútbol", cat:"Free time", emoji:"🎨"}, {en:"meet friends", es:"quedar", cat:"Free time", emoji:"🎨"},
-    {en:"play basketball", es:"baloncesto", cat:"Free time", emoji:"🎨"}, {en:"practise keyboard", es:"teclado", cat:"Free time", emoji:"🎨"}, {en:"visit grandparents", es:"ver abuelos", cat:"Free time", emoji:"🎨"},
-    {en:"walk the dog", es:"pasear perro", cat:"Free time", emoji:"🎨"},
+    
+    // 82-91: Free time (10 items)
+    {en:"do baking", es:"hacer repostería", cat:"Free time", emoji:"🎨"}, {en:"do crafts", es:"hacer manualidades", cat:"Free time", emoji:"🎨"}, {en:"do gardening", es:"hacer jardinería", cat:"Free time", emoji:"🎨"},
+    {en:"do the shopping", es:"hacer la compra", cat:"Free time", emoji:"🎨"}, {en:"football training", es:"entrenamiento de fútbol", cat:"Free time", emoji:"🎨"}, {en:"meet friends", es:"quedar con amigos", cat:"Free time", emoji:"🎨"},
+    {en:"play basketball", es:"jugar al baloncesto", cat:"Free time", emoji:"🎨"}, {en:"practise keyboard", es:"practicar teclado", cat:"Free time", emoji:"🎨"}, {en:"visit grandparents", es:"visitar a los abuelos", cat:"Free time", emoji:"🎨"},
+    {en:"walk the dog", es:"pasear al perro", cat:"Free time", emoji:"🎨"},
+    
+    // 92-101: Adverbs of frequency (10 items)
     {en:"always", es:"siempre", cat:"Adverbs of frequency", emoji:"⏳"}, {en:"usually", es:"normalmente", cat:"Adverbs of frequency", emoji:"⏳"}, {en:"sometimes", es:"a veces", cat:"Adverbs of frequency", emoji:"⏳"},
-    {en:"hardly ever", es:"casi nunca", cat:"Adverbs of frequency", emoji:"⏳"}, {en:"never", es:"nunca", cat:"Adverbs of frequency", emoji:"⏳"}, {en:"once a week", es:"1 vez/semana", cat:"Adverbs of frequency", emoji:"⏳"},
-    {en:"twice a year", es:"2 veces/año", cat:"Adverbs of frequency", emoji:"⏳"}, {en:"three times a day", es:"3 veces/día", cat:"Adverbs of frequency", emoji:"⏳"},
-    {en:"four times a month", es:"4 veces/mes", cat:"Adverbs of frequency", emoji:"⏳"}, {en:"twice a week", es:"2 veces/semana", cat:"Adverbs of frequency", emoji:"⏳"},
+    {en:"hardly ever", es:"casi nunca", cat:"Adverbs of frequency", emoji:"⏳"}, {en:"never", es:"nunca", cat:"Adverbs of frequency", emoji:"⏳"}, {en:"once a week", es:"una vez a la semana", cat:"Adverbs of frequency", emoji:"⏳"},
+    {en:"twice a week", es:"dos veces a la semana", cat:"Adverbs of frequency", emoji:"⏳"}, {en:"three times a day", es:"tres veces al día", cat:"Adverbs of frequency", emoji:"⏳"},
+    {en:"four times a month", es:"cuatro veces al mes", cat:"Adverbs of frequency", emoji:"⏳"}, {en:"twice a year", es:"dos veces al año", cat:"Adverbs of frequency", emoji:"⏳"},
+    
+    // 102-111: Genres (10 items)
     {en:"adventure", es:"aventura", cat:"Genres", emoji:"🎬"}, {en:"animation", es:"animación", cat:"Genres", emoji:"🎬"}, {en:"comedy", es:"comedia", cat:"Genres", emoji:"🎬"},
     {en:"detective", es:"detective", cat:"Genres", emoji:"🎬"}, {en:"drama", es:"drama", cat:"Genres", emoji:"🎬"}, {en:"fantasy", es:"fantasía", cat:"Genres", emoji:"🎬"},
     {en:"historical", es:"histórico", cat:"Genres", emoji:"🎬"}, {en:"horror", es:"terror", cat:"Genres", emoji:"🎬"}, {en:"musical", es:"musical", cat:"Genres", emoji:"🎬"},
     {en:"science fiction", es:"ciencia ficción", cat:"Genres", emoji:"🎬"},
-    {en:"boring", es:"aburrido", cat:"Opinions", emoji:"💬"}, {en:"brilliant", es:"brillante", cat:"Opinions", emoji:"💬"}, {en:"moving", es:"conmovedor", cat:"Opinions", emoji:"💬"},
-    {en:"exciting", es:"emocionante", cat:"Opinions", emoji:"💬"}, {en:"hilarious", es:"divertidísimo", cat:"Opinions", emoji:"💬"}, {en:"rubbish", es:"malo", cat:"Opinions", emoji:"💬"},
+    
+    // 112-119: Opinions (8 items)
+    {en:"boring", es:"aburrido", cat:"Opinions", emoji:"💬"}, {en:"brilliant", es:"genial / brillante", cat:"Opinions", emoji:"💬"}, {en:"moving", es:"conmovedor", cat:"Opinions", emoji:"💬"},
+    {en:"exciting", es:"emocionante", cat:"Opinions", emoji:"💬"}, {en:"hilarious", es:"divertidísimo", cat:"Opinions", emoji:"💬"}, {en:"rubbish", es:"muy malo / basura", cat:"Opinions", emoji:"💬"},
     {en:"stunning", es:"impresionante", cat:"Opinions", emoji:"💬"}, {en:"terrifying", es:"aterrador", cat:"Opinions", emoji:"💬"},
+    
+    // 120-129: Animals (10 items)
     {en:"baboon", es:"babuino", cat:"Animals", emoji:"🦁"}, {en:"camel", es:"camello", cat:"Animals", emoji:"🦁"}, {en:"cheetah", es:"guepardo", cat:"Animals", emoji:"🦁"},
     {en:"chimpanzee", es:"chimpancé", cat:"Animals", emoji:"🦁"}, {en:"cobra", es:"cobra", cat:"Animals", emoji:"🦁"}, {en:"gorilla", es:"gorila", cat:"Animals", emoji:"🦁"},
     {en:"hippopotamus", es:"hipopótamo", cat:"Animals", emoji:"🦁"}, {en:"leopard", es:"leopardo", cat:"Animals", emoji:"🦁"}, {en:"rhinoceros", es:"rinoceronte", cat:"Animals", emoji:"🦁"},
     {en:"scorpion", es:"escorpión", cat:"Animals", emoji:"🦁"},
+    
+    // 130-139: Animal adjectives (10 items)
     {en:"fast", es:"rápido", cat:"Animal adjectives", emoji:"🐾"}, {en:"slow", es:"lento", cat:"Animal adjectives", emoji:"🐾"}, {en:"long", es:"largo", cat:"Animal adjectives", emoji:"🐾"},
     {en:"short", es:"corto", cat:"Animal adjectives", emoji:"🐾"}, {en:"aggressive", es:"agresivo", cat:"Animal adjectives", emoji:"🐾"}, {en:"big", es:"grande", cat:"Animal adjectives", emoji:"🐾"},
     {en:"strong", es:"fuerte", cat:"Animal adjectives", emoji:"🐾"}, {en:"social", es:"social", cat:"Animal adjectives", emoji:"🐾"}, {en:"intelligent", es:"inteligente", cat:"Animal adjectives", emoji:"🐾"},
     {en:"dangerous", es:"peligroso", cat:"Animal adjectives", emoji:"🐾"},
+    
+    // 140-149: Personality (10 items)
     {en:"artistic", es:"artístico", cat:"Personality", emoji:"🧠"}, {en:"brave", es:"valiente", cat:"Personality", emoji:"🧠"}, {en:"friendly", es:"amigable", cat:"Personality", emoji:"🧠"},
     {en:"funny", es:"gracioso", cat:"Personality", emoji:"🧠"}, {en:"hard-working", es:"trabajador", cat:"Personality", emoji:"🧠"}, {en:"lazy", es:"perezoso", cat:"Personality", emoji:"🧠"},
-    {en:"naughty", es:"travieso", cat:"Personality", emoji:"🧠"}, {en:"quiet", es:"tranquilo", cat:"Personality", emoji:"🧠"}, {en:"sporty", es:"deportista", cat:"Personality", emoji:"🧠"},
+    {en:"naughty", es:"travieso", cat:"Personality", emoji:"🧠"}, {en:"quiet", es:"tranquilo / callado", cat:"Personality", emoji:"🧠"}, {en:"sporty", es:"deportista", cat:"Personality", emoji:"🧠"},
     {en:"talkative", es:"hablador", cat:"Personality", emoji:"🧠"},
+    
+    // 150-159: Inventions (10 items)
     {en:"dishwasher", es:"lavavajillas", cat:"Inventions", emoji:"💡"}, {en:"headphones", es:"auriculares", cat:"Inventions", emoji:"💡"}, {en:"microwave", es:"microondas", cat:"Inventions", emoji:"💡"},
-    {en:"mobile phone", es:"móvil", cat:"Inventions", emoji:"💡"}, {en:"quadcopter", es:"cuadricóptero", cat:"Inventions", emoji:"💡"}, {en:"remote control", es:"mando", cat:"Inventions", emoji:"💡"},
-    {en:"Rubiks cube", es:"cubo Rubik", cat:"Inventions", emoji:"💡"}, {en:"solar panel", es:"panel solar", cat:"Inventions", emoji:"💡"}, {en:"tablet", es:"tableta", cat:"Inventions", emoji:"💡"},
+    {en:"mobile phone", es:"teléfono móvil", cat:"Inventions", emoji:"💡"}, {en:"quadcopter", es:"cuadricóptero / dron", cat:"Inventions", emoji:"💡"}, {en:"remote control", es:"mando a distancia", cat:"Inventions", emoji:"💡"},
+    {en:"Rubiks cube", es:"cubo de Rubik", cat:"Inventions", emoji:"💡"}, {en:"solar panel", es:"panel solar", cat:"Inventions", emoji:"💡"}, {en:"tablet", es:"tableta", cat:"Inventions", emoji:"💡"},
     {en:"washing machine", es:"lavadora", cat:"Inventions", emoji:"💡"},
+    
+    // 160-212: Verbs (53 items)
     {en:"say", es:"decir", cat:"Verbs", emoji:"🏃"}, {en:"spell", es:"deletrear", cat:"Verbs", emoji:"🏃"}, {en:"speak", es:"hablar", cat:"Verbs", emoji:"🏃"},
     {en:"think", es:"pensar", cat:"Verbs", emoji:"🏃"}, {en:"have", es:"tener", cat:"Verbs", emoji:"🏃"}, {en:"go", es:"ir", cat:"Verbs", emoji:"🏃"},
-    {en:"help", es:"ayudar", cat:"Verbs", emoji:"🏃"}, {en:"work", es:"trabajar", cat:"Verbs", emoji:"🏃"}, {en:"wear", es:"llevar", cat:"Verbs", emoji:"🏃"},
+    {en:"help", es:"ayudar", cat:"Verbs", emoji:"🏃"}, {en:"work", es:"trabajar", cat:"Verbs", emoji:"🏃"}, {en:"wear", es:"llevar puesto", cat:"Verbs", emoji:"🏃"},
     {en:"eat", es:"comer", cat:"Verbs", emoji:"🏃"}, {en:"drink", es:"beber", cat:"Verbs", emoji:"🏃"}, {en:"jump", es:"saltar", cat:"Verbs", emoji:"🏃"},
     {en:"walk", es:"caminar", cat:"Verbs", emoji:"🏃"}, {en:"fly", es:"volar", cat:"Verbs", emoji:"🏃"}, {en:"swim", es:"nadar", cat:"Verbs", emoji:"🏃"},
     {en:"forget", es:"olvidar", cat:"Verbs", emoji:"🏃"}, {en:"invent", es:"inventar", cat:"Verbs", emoji:"🏃"}, {en:"play", es:"jugar", cat:"Verbs", emoji:"🏃"},
     {en:"move", es:"mover", cat:"Verbs", emoji:"🏃"}, {en:"open", es:"abrir", cat:"Verbs", emoji:"🏃"}, {en:"close", es:"cerrar", cat:"Verbs", emoji:"🏃"},
-    {en:"love", es:"amar", cat:"Verbs", emoji:"🏃"}, {en:"like", es:"gustar", cat:"Verbs", emoji:"🏃"}, {en:"live", es:"vivir", cat:"Verbs", emoji:"🏃"},
+    {en:"love", es:"amar / encantar", cat:"Verbs", emoji:"🏃"}, {en:"like", es:"gustar", cat:"Verbs", emoji:"🏃"}, {en:"live", es:"vivir", cat:"Verbs", emoji:"🏃"},
     {en:"dream", es:"soñar", cat:"Verbs", emoji:"🏃"}, {en:"cook", es:"cocinar", cat:"Verbs", emoji:"🏃"}, {en:"sing", es:"cantar", cat:"Verbs", emoji:"🏃"},
     {en:"listen", es:"escuchar", cat:"Verbs", emoji:"🏃"}, {en:"clean", es:"limpiar", cat:"Verbs", emoji:"🏃"}, {en:"read", es:"leer", cat:"Verbs", emoji:"🏃"},
     {en:"dance", es:"bailar", cat:"Verbs", emoji:"🏃"}, {en:"study", es:"estudiar", cat:"Verbs", emoji:"🏃"}, {en:"want", es:"querer", cat:"Verbs", emoji:"🏃"},
     {en:"call", es:"llamar", cat:"Verbs", emoji:"🏃"}, {en:"arrive", es:"llegar", cat:"Verbs", emoji:"🏃"}, {en:"see", es:"ver", cat:"Verbs", emoji:"🏃"},
-    {en:"watch", es:"mirar", cat:"Verbs", emoji:"🏃"}, {en:"is", es:"es", cat:"Verbs", emoji:"🏃"}, {en:"there is", es:"hay", cat:"Verbs", emoji:"🏃"},
-    {en:"send", es:"enviar", cat:"Verbs", emoji:"🏃"}, {en:"give", es:"dar", cat:"Verbs", emoji:"🏃"}, {en:"make", es:"hacer", cat:"Verbs", emoji:"🏃"},
+    {en:"watch", es:"mirar / ver", cat:"Verbs", emoji:"🏃"}, {en:"be (is)", es:"ser / estar", cat:"Verbs", emoji:"🏃"}, {en:"there is", es:"hay", cat:"Verbs", emoji:"🏃"},
+    {en:"send", es:"enviar", cat:"Verbs", emoji:"🏃"}, {en:"give", es:"dar", cat:"Verbs", emoji:"🏃"}, {en:"make", es:"hacer / fabricar", cat:"Verbs", emoji:"🏃"},
     {en:"write", es:"escribir", cat:"Verbs", emoji:"🏃"}, {en:"ask", es:"preguntar", cat:"Verbs", emoji:"🏃"}, {en:"answer", es:"responder", cat:"Verbs", emoji:"🏃"},
     {en:"learn", es:"aprender", cat:"Verbs", emoji:"🏃"}, {en:"understand", es:"entender", cat:"Verbs", emoji:"🏃"}, {en:"visit", es:"visitar", cat:"Verbs", emoji:"🏃"},
-    {en:"leave", es:"salir", cat:"Verbs", emoji:"🏃"}, {en:"take", es:"tomar", cat:"Verbs", emoji:"🏃"}, {en:"draw", es:"dibujar", cat:"Verbs", emoji:"🏃"},
+    {en:"leave", es:"salir / dejar", cat:"Verbs", emoji:"🏃"}, {en:"take", es:"tomar / llevar", cat:"Verbs", emoji:"🏃"}, {en:"draw", es:"dibujar", cat:"Verbs", emoji:"🏃"},
     {en:"find", es:"encontrar", cat:"Verbs", emoji:"🏃"}, {en:"choose", es:"elegir", cat:"Verbs", emoji:"🏃"}
 ];
 
