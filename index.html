@@ -251,6 +251,22 @@ let currentList = [], currentIndex = 0, isFlipped = false, errorList = [];
 let gameMode = 'EN-ES', isExamMode = false;
 let seconds = 0, timerInterval = null, correct = 0, wrong = 0, currentStreak = 0;
 
+/* --- Sistema de carga de voces para evitar el deletreo en Chrome --- */
+let voicesLoaded = [];
+
+function loadVoices() {
+    if ('speechSynthesis' in window) {
+        voicesLoaded = window.speechSynthesis.getVoices();
+    }
+}
+
+if ('speechSynthesis' in window) {
+    loadVoices();
+    if (window.speechSynthesis.onvoiceschanged !== undefined) {
+        window.speechSynthesis.onvoiceschanged = loadVoices;
+    }
+}
+
 const ui = {
     card: document.getElementById("flashcard"),
     faceFront: document.getElementById("faceFront"),
@@ -344,9 +360,23 @@ function flipCard() {
 }
 
 function speakEnglishOnly() {
+    if (!('speechSynthesis' in window)) return;
+    window.speechSynthesis.cancel();
+    
     const item = currentList[currentIndex];
     const msg = new SpeechSynthesisUtterance(item.en);
     msg.lang = 'en-US';
+    msg.rate = 0.9;
+    
+    if (voicesLoaded.length === 0) {
+        loadVoices();
+    }
+    
+    const englishVoice = voicesLoaded.find(v => v.lang === "en-US" || v.lang === "en-GB") || voicesLoaded.find(v => v.lang.startsWith("en"));
+    if (englishVoice) {
+        msg.voice = englishVoice;
+    }
+    
     window.speechSynthesis.speak(msg);
 }
 
@@ -418,10 +448,31 @@ function markResult(isCorrect) {
 }
 
 function playCurrentAudio() {
+    if (!('speechSynthesis' in window)) return;
+    window.speechSynthesis.cancel();
+    
     const text = isFlipped ? ui.textBack.textContent : ui.textFront.textContent;
-    const lang = isFlipped ? (gameMode === 'EN-ES' ? 'es-ES' : 'en-US') : (gameMode === 'EN-ES' ? 'en-US' : 'es-ES');
+    const isEnglish = isFlipped ? (gameMode === 'EN-ES' ? false : true) : (gameMode === 'EN-ES' ? true : false);
+    
     const msg = new SpeechSynthesisUtterance(text);
-    msg.lang = lang;
+    msg.lang = isEnglish ? 'en-US' : 'es-ES';
+    msg.rate = 0.9;
+    
+    if (voicesLoaded.length === 0) {
+        loadVoices();
+    }
+    
+    let targetVoice = null;
+    if (isEnglish) {
+        targetVoice = voicesLoaded.find(v => v.lang === "en-US" || v.lang === "en-GB") || voicesLoaded.find(v => v.lang.startsWith("en"));
+    } else {
+        targetVoice = voicesLoaded.find(v => v.lang === "es-ES" || v.lang === "es-MX") || voicesLoaded.find(v => v.lang.startsWith("es"));
+    }
+    
+    if (targetVoice) {
+        msg.voice = targetVoice;
+    }
+    
     window.speechSynthesis.speak(msg);
 }
 
